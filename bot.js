@@ -1,14 +1,5 @@
 require('dotenv').config();
-const  { TwitterApi } = require('twitter-api-v2');
-
-const client = new TwitterApi({
-    appKey: process.env.TWITTER_API_KEY,
-    appSecret: process.env.TWITTER_API_SECRET,
-    accessToken: process.env.TWITTER_ACCESS_TOKEN,
-    accessSecret: process.env.TWITTER_TOKEN_SECRET,
-})
 const Snoowrap = require('snoowrap');
-const { CommentStream } = require('snoostorm');
 
 const r = new Snoowrap({
     userAgent: process.env.REDDIT_USERAGENT,
@@ -66,12 +57,11 @@ const getUserTweets = async () => {
         }
     }
 
-    console.dir(userTweets, {
-        depth: null
-    });
+    
     mostRecentTweet = userTweets[0] ?  userTweets[0].id.toString() : mostRecentTweet;
     console.log(`Got ${userTweets.length} Tweets from ${userName} (user ID ${userId})!`);
     console.log(mostRecentTweet)
+    return userTweets
 
 }
 
@@ -92,6 +82,13 @@ const getPage = async (params, options, nextToken) => {
         throw new Error(`Request failed: ${err}`);
     }
 }
-setInterval(()=>{
-    getUserTweets();
-},5000)
+
+const postNewTweet = (tweetObj) => {
+    tweetObj.map((obj)=>{
+        console.log(obj)
+    })
+}
+setInterval(async ()=>{
+    let tweets = await getUserTweets();
+    postNewTweet(tweets);
+},300000)
