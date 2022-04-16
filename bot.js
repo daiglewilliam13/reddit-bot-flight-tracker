@@ -109,10 +109,14 @@ const postNewTweet = (tweetObj) => {
 }
 
 const findPostAndReply = (obj, refObj) => {
-    let name = refObj[obj.id];
-    console.log(name)
-    r.getSubmission(name)
-    .reply('test');
+    let refId = obj.referenced_tweets[0].id;
+    let refName = findPostName(refId, refObj)
+    console.log(refName)
+}
+
+const findPostName = (id, obj) => {
+    console.log(obj)
+    return obj[id];
 }
 
 setInterval(async () => {
