@@ -15,7 +15,7 @@ const url = `https://api.twitter.com/2/users/${userId}/tweets`;
 
 const bearerToken = process.env.BEARER_TOKEN;
 
-let mostRecentTweet = "1514725897663774737"
+let mostRecentTweet = "1509918447605456909"
 const getUserTweets = async () => {
     let userTweets = [];
 
@@ -83,22 +83,21 @@ const getPage = async (params, options, nextToken) => {
 }
 
 const postNewTweet = (tweetObj) => {
-    tweetObj.forEach((obj) => {
-        console.log(obj)
-        let url = "https://twitter.com/ElonJet/status/" + obj.id
-        if (!obj.in_reply_to_user_id) {
-
-            let title = obj.text;
-            r.getSubreddit('whereiselon').submitLink({
-                title: `${title} ID:${obj.id}`,
-                url: url,
-            })
+    tweetObj.forEach((obj, index) => {
+        setTimeout(function () {
+            console.log(obj)
+            let url = "https://twitter.com/ElonJet/status/" + obj.id
+            if (!obj.in_reply_to_user_id) {
+                let title = obj.text;
+                r.getSubreddit('whereiselon').submitLink({
+                    title: `${title} ID:${obj.id}`,
+                    url: url,
+                })
                 .approve()
-        } else {
-            setTimeout(function () {
-                findPostAndReply(obj);
-            }, 1000)
-        }
+            } else {
+            findPostAndReply(obj);
+            }
+        },1000*index)
     })
 }
 
@@ -111,7 +110,9 @@ const findPostAndReply = (obj) => {
                 let isPost = post.title.indexOf(searchParam)
                 if (isPost) {
                     r.getSubmission(post.id).reply(obj.text)
-                    console.log('comment submitted')
+                        .then(() => {
+                            console.log('comment submitted')
+                        })
                 }
             })
         })
