@@ -85,10 +85,20 @@ const getPage = async (params, options, nextToken) => {
 
 const postNewTweet = (tweetObj) => {
     tweetObj.map((obj)=>{
-        console.log(obj)
+        if(!obj.in_reply_to_user_id){
+            let url = "https://twitter.com/ElonJet/status/"+obj.id
+            let title = obj.text;
+            r.getSubreddit('whereiselon').submitLink({
+                title:title,
+                url: url, 
+            })
+            .approve().then((res)=>console.log(res))
+        } else {
+            r.getSubmission
+        }
     })
 }
 setInterval(async ()=>{
     let tweets = await getUserTweets();
     postNewTweet(tweets);
-},300000)
+},1000)
