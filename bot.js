@@ -86,6 +86,7 @@ const buildURL = (id) =>{
     return url
 }
 const postNewTweet = (tweetObj) => {
+    let tweetRef = {}
     tweetObj.forEach((obj, index) => {
         setTimeout(function () {
             console.log(obj)
@@ -97,20 +98,21 @@ const postNewTweet = (tweetObj) => {
                     url: url,
                 })
                 .approve()
+                .then((res)=>{
+                    tweetRef[obj.id] = res.name;
+                })
             } else {
-            findPostAndReply(obj);
+            findPostAndReply(obj, tweetRef);
             }
         },1000*index)
     })
 }
 
-const findPostAndReply = (obj) => {
-    let url = buildURL(obj.id)
-    r.getSubreddit('whereiselon')
-        .search({ url:`${url}`})
-        .then((foundPosts) => {
-            console.log(foundPosts)
-        })
+const findPostAndReply = (obj, refObj) => {
+    let name = refObj[obj.id];
+    console.log(name)
+    r.getSubmission(name)
+    .reply('test');
 }
 
 setInterval(async () => {
