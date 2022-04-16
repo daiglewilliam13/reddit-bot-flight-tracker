@@ -111,7 +111,7 @@ const postNewTweet = (tweetObj) => {
 const findPostAndReply = (obj, refObj) => {
     let refId = obj.referenced_tweets[0].id;
     let refName = findPostName(refId, refObj)
-    console.log(refName)
+    if(refName){r.getSubmission(refName).reply(obj.text)}
 }
 
 const findPostName = (id, obj) => {
