@@ -24,6 +24,7 @@ const url = `https://api.twitter.com/2/users/${userId}/tweets`;
 
 const bearerToken = process.env.BEARER_TOKEN;
 
+let mostRecentTweet = "1514725897663774737"
 const getUserTweets = async () => {
     console.log(bearerToken)
     let userTweets = [];
@@ -34,7 +35,7 @@ const getUserTweets = async () => {
         "tweet.fields": "id",
         "expansions": "author_id,in_reply_to_user_id,attachments.media_keys",
         "exclude":"replies,retweets",
-        "since_id":"1514725897663774737"
+        "since_id": mostRecentTweet
     }
 
     const options = {
@@ -68,7 +69,9 @@ const getUserTweets = async () => {
     console.dir(userTweets, {
         depth: null
     });
+    mostRecentTweet = userTweets[0] ?  userTweets[0].id.toString() : mostRecentTweet;
     console.log(`Got ${userTweets.length} Tweets from ${userName} (user ID ${userId})!`);
+    console.log(mostRecentTweet)
 
 }
 
@@ -89,5 +92,6 @@ const getPage = async (params, options, nextToken) => {
         throw new Error(`Request failed: ${err}`);
     }
 }
-
-getUserTweets();
+setInterval(()=>{
+    getUserTweets();
+},5000)
