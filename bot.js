@@ -81,16 +81,19 @@ const getPage = async (params, options, nextToken) => {
         throw new Error(`Request failed: ${err}`);
     }
 }
-
+const buildURL = (id) =>{
+    let url = "https://twitter.com/ElonJet/status/"+id;
+    return url
+}
 const postNewTweet = (tweetObj) => {
     tweetObj.forEach((obj, index) => {
         setTimeout(function () {
             console.log(obj)
-            let url = "https://twitter.com/ElonJet/status/" + obj.id
+            let url = buildURL(obj.id);
             if (!obj.in_reply_to_user_id) {
                 let title = obj.text;
                 r.getSubreddit('whereiselon').submitLink({
-                    title: `${title} ID:${obj.id}`,
+                    title: `${title} ID: ${obj.id}`,
                     url: url,
                 })
                 .approve()
@@ -102,23 +105,15 @@ const postNewTweet = (tweetObj) => {
 }
 
 const findPostAndReply = (obj) => {
-    const searchParam = obj.referenced_tweets[0].id
+    let url = buildURL(obj.id)
     r.getSubreddit('whereiselon')
-        .search({ query: `ID` })
+        .search({ url:`${url}`})
         .then((foundPosts) => {
-            foundPosts.forEach((post) => {
-                let isPost = post.title.indexOf(searchParam)
-                if (isPost) {
-                    r.getSubmission(post.id).reply(obj.text)
-                        .then(() => {
-                            console.log('comment submitted')
-                        })
-                }
-            })
+            console.log(foundPosts)
         })
 }
 
 setInterval(async () => {
     let tweets = await getUserTweets();
     postNewTweet(tweets.reverse());
-}, 1000)
+}, 10000)
