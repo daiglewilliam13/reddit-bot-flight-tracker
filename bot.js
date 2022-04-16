@@ -83,7 +83,7 @@ const getPage = async (params, options, nextToken) => {
 }
 
 const postNewTweet = (tweetObj) => {
-    tweetObj.map((obj) => {
+    tweetObj.forEach((obj) => {
         console.log(obj)
         let url = "https://twitter.com/ElonJet/status/" + obj.id
         if (!obj.in_reply_to_user_id) {
@@ -97,7 +97,7 @@ const postNewTweet = (tweetObj) => {
         } else {
             setTimeout(function () {
                 findPostAndReply(obj);
-            }, 20000)
+            }, 1000)
         }
     })
 }
