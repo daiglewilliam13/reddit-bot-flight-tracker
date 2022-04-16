@@ -17,7 +17,6 @@ const bearerToken = process.env.BEARER_TOKEN;
 
 let mostRecentTweet = "1514725897663774737"
 const getUserTweets = async () => {
-    console.log(bearerToken)
     let userTweets = [];
 
     // we request the author_id expansion so that we can print out the user name later
