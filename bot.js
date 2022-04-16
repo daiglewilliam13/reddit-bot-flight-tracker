@@ -22,24 +22,24 @@ const needle = require('needle');
 const userId = "1268280560599867392";
 const url = `https://api.twitter.com/2/users/${userId}/tweets`;
 
-// The code below sets the bearer token from your environment variables
-// To set environment variables on macOS or Linux, run the export command below from the terminal:
-// export BEARER_TOKEN='YOUR-TOKEN'
 const bearerToken = process.env.BEARER_TOKEN;
 
 const getUserTweets = async () => {
+    console.log(bearerToken)
     let userTweets = [];
 
     // we request the author_id expansion so that we can print out the user name later
     let params = {
-        "max_results": 100,
-        "tweet.fields": "created_at",
-        "expansions": "author_id"
+        "max_results": 10,
+        "tweet.fields": "id",
+        "expansions": "author_id,in_reply_to_user_id,attachments.media_keys",
+        "exclude":"replies,retweets",
+        "since_id":"1514725897663774737"
     }
 
     const options = {
         headers: {
-            "User-Agent": "v2UserTweetsJS",
+            "User-Agent": 'flight tracker bot v1.0',
             "authorization": `Bearer ${bearerToken}`
         }
     }
@@ -48,7 +48,6 @@ const getUserTweets = async () => {
     let nextToken = null;
     let userName;
     console.log("Retrieving Tweets...");
-
     while (hasNextPage) {
         let resp = await getPage(params, options, nextToken);
         if (resp && resp.meta && resp.meta.result_count && resp.meta.result_count > 0) {
