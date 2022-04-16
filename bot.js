@@ -24,7 +24,7 @@ const getUserTweets = async () => {
         "max_results": 10,
         "tweet.fields": "id",
         "expansions": "author_id,in_reply_to_user_id,attachments.media_keys,referenced_tweets.id",
-        "exclude":"replies,retweets",
+        "exclude": "replies,retweets",
         "since_id": mostRecentTweet
     }
 
@@ -56,8 +56,8 @@ const getUserTweets = async () => {
         }
     }
 
-    
-    mostRecentTweet = userTweets[0] ?  userTweets[0].id.toString() : mostRecentTweet;
+
+    mostRecentTweet = userTweets[0] ? userTweets[0].id.toString() : mostRecentTweet;
     console.log(`Got ${userTweets.length} Tweets from ${userName} (user ID ${userId})!`);
     console.log(mostRecentTweet)
     return userTweets
@@ -83,36 +83,41 @@ const getPage = async (params, options, nextToken) => {
 }
 
 const postNewTweet = (tweetObj) => {
-    tweetObj.map((obj)=>{
+    tweetObj.map((obj) => {
         console.log(obj)
         let url = "https://twitter.com/ElonJet/status/" + obj.id
-        if(!obj.in_reply_to_user_id){
+        if (!obj.in_reply_to_user_id) {
 
             let title = obj.text;
             r.getSubreddit('whereiselon').submitLink({
-                title:`${title} ID:${obj.id}`,
-                url: url, 
+                title: `${title} ID:${obj.id}`,
+                url: url,
             })
-            .approve()
+                .approve()
         } else {
-            const searchParam = obj.referenced_tweets[0].id
-            r.getSubreddit('whereiselon')
-            .search({query:`ID`})
-            .then((foundPosts)=>{
-                foundPosts.forEach((post)=>{
-                    let isPost = post.title.indexOf(searchParam)
-                    if(isPost){
-                        setTimeout(function(){
-                            r.getSubmission(post.id).reply(obj.text)
-                        }, 20000)
-                    }
-                })
-            })
+            setTimeout(function () {
+                findPostAndReply(obj);
+            }, 20000)
         }
     })
 }
 
-setInterval(async ()=>{
+const findPostAndReply = (obj) => {
+    const searchParam = obj.referenced_tweets[0].id
+    r.getSubreddit('whereiselon')
+        .search({ query: `ID` })
+        .then((foundPosts) => {
+            foundPosts.forEach((post) => {
+                let isPost = post.title.indexOf(searchParam)
+                if (isPost) {
+                    r.getSubmission(post.id).reply(obj.text)
+                    console.log('comment submitted')
+                }
+            })
+        })
+}
+
+setInterval(async () => {
     let tweets = await getUserTweets();
     postNewTweet(tweets.reverse());
-},1000)
+}, 1000)
