@@ -24,7 +24,7 @@ const getUserTweets = async () => {
     let params = {
         "max_results": 10,
         "tweet.fields": "id",
-        "expansions": "author_id,in_reply_to_user_id,attachments.media_keys",
+        "expansions": "author_id,in_reply_to_user_id,attachments.media_keys,referenced_tweets.id",
         "exclude":"replies,retweets",
         "since_id": mostRecentTweet
     }
@@ -85,20 +85,34 @@ const getPage = async (params, options, nextToken) => {
 
 const postNewTweet = (tweetObj) => {
     tweetObj.map((obj)=>{
+        console.log(obj)
+        let url = "https://twitter.com/ElonJet/status/" + obj.id
         if(!obj.in_reply_to_user_id){
-            let url = "https://twitter.com/ElonJet/status/"+obj.id
+
             let title = obj.text;
             r.getSubreddit('whereiselon').submitLink({
-                title:title,
+                title:`${title} ID:${obj.id}`,
                 url: url, 
             })
-            .approve().then((res)=>console.log(res))
+            .approve()
         } else {
-            r.getSubmission
+            const searchParam = obj.referenced_tweets[0].id
+            r.getSubreddit('whereiselon')
+            .search({query:`ID`})
+            .then((foundPosts)=>{
+                foundPosts.forEach((post)=>{
+                    let isPost = post.title.indexOf(searchParam)
+                    if(isPost){
+                        setTimeout()
+                        r.getSubmission(post.id).reply(obj.text)
+                    }
+                })
+            })
         }
     })
 }
+
 setInterval(async ()=>{
     let tweets = await getUserTweets();
-    postNewTweet(tweets);
+    postNewTweet(tweets.reverse());
 },1000)
