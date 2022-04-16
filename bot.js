@@ -103,8 +103,9 @@ const postNewTweet = (tweetObj) => {
                 foundPosts.forEach((post)=>{
                     let isPost = post.title.indexOf(searchParam)
                     if(isPost){
-                        setTimeout()
-                        r.getSubmission(post.id).reply(obj.text)
+                        setTimeout(function(){
+                            r.getSubmission(post.id).reply(obj.text)
+                        }, 20000)
                     }
                 })
             })
