@@ -15,7 +15,7 @@ const url = `https://api.twitter.com/2/users/${userId}/tweets`;
 
 const bearerToken = process.env.BEARER_TOKEN;
 
-let mostRecentTweet = "1515532702111473664"
+let mostRecentTweet = "1518785084496789505"
 const getUserTweets = async () => {
     let userTweets = [];
 
