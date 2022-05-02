@@ -10,7 +10,7 @@ const r = new Snoowrap({
 });
 
 const needle = require('needle');
-const userId = "1268280560599867392";
+const userId = "1520220213614153728";
 const url = `https://api.twitter.com/2/users/${userId}/tweets`;
 
 const bearerToken = process.env.BEARER_TOKEN;
