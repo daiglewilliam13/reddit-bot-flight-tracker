@@ -121,4 +121,4 @@ const findPostName = (id, obj) => {
 setInterval(async () => {
     let tweets = await getUserTweets();
     postNewTweet(tweets.reverse());
-}, 50000)
+}, 5000)
