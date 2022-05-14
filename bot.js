@@ -10,12 +10,12 @@ const r = new Snoowrap({
 });
 
 const needle = require('needle');
-const userId = "1520220213614153728";
+const userId = "1268280560599867392";
 const url = `https://api.twitter.com/2/users/${userId}/tweets`;
 
 const bearerToken = process.env.BEARER_TOKEN;
 
-let mostRecentTweet = "1519101832332722178"
+let mostRecentTweet = "1520219810201849862"
 const getUserTweets = async () => {
     let userTweets = [];
 
